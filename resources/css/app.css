@@ -1,0 +1,69 @@
+
+/* Estilos para el formulario */
+form {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f7f7f7;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Etiquetas de los campos */
+form label {
+    display: block;
+    margin: 8px 0 4px;
+    font-weight: bold;
+}
+
+/* Inputs de texto, select y textarea */
+form input[type="text"],
+form input[type="email"],
+form input[type="date"],
+form input[type="number"],
+form textarea,
+form select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+/* Botón de enviar */
+form button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 4px;
+}
+
+/* Botón hover */
+form button:hover {
+    background-color: #45a049;
+}
+
+/* Para campos de fecha y checkbox */
+form input[type="checkbox"],
+form input[type="date"] {
+    width: auto;
+}
+
+/* Estilo para los campos que tienen un error */
+form input:invalid {
+    border-color: red;
+}
+
+form input:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+/* Ajustes para los contenedores */
+.form-group {
+    margin-bottom: 15px;
+}
