@@ -21,6 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'rut',
     ];
 
     /**
@@ -45,4 +47,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Mutator para asegurarnos de que siempre se guarde con el formato correcto
+     */
+    public function setRutAttribute($value)
+    {
+        $this->attributes['rut'] = strtoupper(str_replace('.', '', trim($value)));
+    }    
 }
