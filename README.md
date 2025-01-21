@@ -20,6 +20,7 @@ Este proyecto está desarrollado utilizando las siguientes tecnologías:
 
 *   PHP 8.4.2
 *   Laravel 11
+*   Breeze 2.3
 *   MySQL 8
 *   Composer 2.8.4
 *   Apache
