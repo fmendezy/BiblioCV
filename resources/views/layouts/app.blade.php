@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>{{ config('app.name', 'BiblioCV') }}</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -32,5 +32,9 @@
                 {{ $slot }}
             </main>
         </div>
+        <footer class="text-center text-xs text-gray-500 py-4 w-full bg-transparent">
+    © {{ date('Y') }} BiblioCV 1.0.0 | Desarrollado por Francisco Mendez
+</footer>
+
     </body>
 </html>

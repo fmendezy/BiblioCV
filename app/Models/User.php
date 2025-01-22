@@ -18,11 +18,11 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
+        'rut',
         'name',
         'email',
         'password',
         'role',
-        'rut',
     ];
 
     /**
@@ -48,11 +48,20 @@ class User extends Authenticatable
         ];
     }
 
+    public function isAdmin() {
+        return $this->role === 'admin';
+    }
+    
+    public function isEmployee() {
+        return $this->role === 'employee';
+    }
+    
     /**
      * Mutator para asegurarnos de que siempre se guarde con el formato correcto
-     */
+    */
     public function setRutAttribute($value)
     {
         $this->attributes['rut'] = strtoupper(str_replace('.', '', trim($value)));
-    }    
+    }   
+
 }

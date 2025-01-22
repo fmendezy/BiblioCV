@@ -3,6 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 return new class extends Migration
 {
@@ -13,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->string('rut')->unique();
+            $table->string('role')->default('user');
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
@@ -20,6 +24,27 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
         });
+
+        DB::table('users')->insert([
+            [
+                'rut' => '12345678-9',
+                'name' => 'Funcionario de Ejemplo',
+                'email' => 'funcionario@bibliocv.cl',
+                'password' => Hash::make('password'),
+                'role' => 'employee',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'rut' => '98765432-1',
+                'name' => 'Usuario de Ejemplo',
+                'email' => 'usuario@bibliocv.cl',
+                'password' => Hash::make('password'),
+                'role' => 'user',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ]);
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();

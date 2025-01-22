@@ -1,146 +1,115 @@
-@extends('layouts.app')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Crear Currículum') }}
+        </h2>
+    </x-slot>
 
-@section('content')
-<h1>Crear nuevo currículum</h1>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+                <form action="{{ route('curriculums.store') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
 
-<!-- Mostrar errores de validación -->
-@if($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
+                    <div class="mb-4">
+                        <label class="block text-gray-700">RUT:</label>
+                        <input type="text" name="rut" class="w-full border-gray-300 rounded-md shadow-sm">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-gray-700">Nombre:</label>
+                        <input type="text" name="name" class="w-full border-gray-300 rounded-md shadow-sm">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-gray-700">Email:</label>
+                        <input type="email" name="email" class="w-full border-gray-300 rounded-md shadow-sm">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-gray-700">Teléfono:</label>
+                        <input type="text" name="phone" class="w-full border-gray-300 rounded-md shadow-sm">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-gray-700">Título Profesional:</label>
+                        <input type="text" name="job_title" class="w-full border-gray-300 rounded-md shadow-sm">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-gray-700">Resumen Profesional:</label>
+                        <textarea name="profile_summary" class="w-full border-gray-300 rounded-md shadow-sm"></textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-gray-700">Foto:</label>
+                        <input type="file" name="photo" class="w-full border-gray-300 rounded-md shadow-sm">
+                    </div>
+
+                    <div class="mb-4">
+                        <h3 class="text-lg font-bold">Formación Académica</h3>
+                        <div id="education-section">
+                            <div class="education-item">
+                                <input type="text" name="education[][institution]" placeholder="Institución" class="w-full border-gray-300 rounded-md shadow-sm mb-2">
+                                <input type="text" name="education[][degree]" placeholder="Título obtenido" class="w-full border-gray-300 rounded-md shadow-sm mb-2">
+                                <input type="text" name="education[][start_year]" placeholder="Año de inicio" class="w-full border-gray-300 rounded-md shadow-sm mb-2">
+                                <input type="text" name="education[][end_year]" placeholder="Año de finalización" class="w-full border-gray-300 rounded-md shadow-sm mb-2">
+                            </div>
+                        </div>
+                        <button type="button" onclick="addEducation()">Agregar Formación</button>
+                    </div>
+
+                    <div class="mb-4">
+                        <h3 class="text-lg font-bold">Experiencia Laboral</h3>
+                        <div id="work-section">
+                            <div class="work-item">
+                                <input type="text" name="work[][position]" placeholder="Puesto" class="w-full border-gray-300 rounded-md shadow-sm mb-2">
+                                <input type="text" name="work[][company]" placeholder="Empresa" class="w-full border-gray-300 rounded-md shadow-sm mb-2">
+                                <input type="text" name="work[][start_date]" placeholder="Fecha inicio" class="w-full border-gray-300 rounded-md shadow-sm mb-2">
+                                <input type="text" name="work[][end_date]" placeholder="Fecha fin" class="w-full border-gray-300 rounded-md shadow-sm mb-2">
+                            </div>
+                        </div>
+                        <button type="button" onclick="addWork()">Agregar Experiencia</button>
+                    </div>
+
+                    <div class="mb-4">
+                        <h3 class="text-lg font-bold">Habilidades</h3>
+                        <textarea name="skills" class="w-full border-gray-300 rounded-md shadow-sm"></textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <h3 class="text-lg font-bold">Referencias</h3>
+                        <div id="reference-section">
+                            <div class="reference-item">
+                                <input type="text" name="references[][name]" placeholder="Nombre" class="w-full border-gray-300 rounded-md shadow-sm mb-2">
+                                <input type="text" name="references[][position]" placeholder="Cargo" class="w-full border-gray-300 rounded-md shadow-sm mb-2">
+                                <input type="text" name="references[][company]" placeholder="Empresa" class="w-full border-gray-300 rounded-md shadow-sm mb-2">
+                                <input type="text" name="references[][phone]" placeholder="Teléfono" class="w-full border-gray-300 rounded-md shadow-sm mb-2">
+                                <input type="text" name="references[][email]" placeholder="Email" class="w-full border-gray-300 rounded-md shadow-sm mb-2">
+                            </div>
+                        </div>
+                        <button type="button" onclick="addReference()">Agregar Referencia</button>
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md">
+                            Guardar Currículum
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-@endif
+</x-app-layout>
 
-<form action="{{ route('curriculums.store') }}" method="POST">
-    @csrf
-    <div class="form-group">
-        <label for="name">Nombre completo:</label>
-        <input type="text" name="name" id="name" value="{{ old('name') }}" required>
-    </div>
-
-    <div class="form-group">
-        <label for="rut">RUT:</label>
-        <input type="text" name="rut" id="rut" value="{{ old('rut') }}" required placeholder="Formato: 12.345.678-9">
-    </div>
-
-    <div class="form-group">
-        <label for="dob">Fecha de nacimiento:</label>
-        <input type="date" name="dob" id="dob" value="{{ old('dob') }}" required>
-    </div>
-
-    <div class="form-group">
-        <label for="address">Dirección:</label>
-        <input type="text" name="address" id="address" value="{{ old('address') }}" required>
-    </div>
-
-    <div class="form-group">
-        <label for="phone">Teléfono:</label>
-        <input type="text" name="phone" id="phone" value="{{ old('phone') }}" required>
-    </div>
-
-    <div class="form-group">
-        <label for="email">Correo electrónico:</label>
-        <input type="email" name="email" id="email" value="{{ old('email') }}" required>
-    </div>
-
-    <div class="form-group">
-        <label for="civil_status">Estado civil:</label>
-        <select name="civil_status" id="civil_status" required>
-            <option value="Soltero(a)" {{ old('civil_status') == 'Soltero(a)' ? 'selected' : '' }}>Soltero(a)</option>
-            <option value="Casado(a)" {{ old('civil_status') == 'Casado(a)' ? 'selected' : '' }}>Casado(a)</option>
-            <option value="Divorciado(a)" {{ old('civil_status') == 'Divorciado(a)' ? 'selected' : '' }}>Divorciado(a)</option>
-            <option value="Viudo(a)" {{ old('civil_status') == 'Viudo(a)' ? 'selected' : '' }}>Viudo(a)</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label for="photo">URL de la foto:</label>
-        <input type="text" name="photo" id="photo" value="{{ old('photo') }}">
-    </div>
-
-    <div class="form-group">
-        <label for="degree">Título profesional:</label>
-        <input type="text" name="degree" id="degree" value="{{ old('degree') }}" required>
-    </div>
-
-    <div class="form-group">
-        <label for="institution">Institución de educación:</label>
-        <input type="text" name="institution" id="institution" value="{{ old('institution') }}" required>
-    </div>
-
-    <div class="form-group">
-        <label for="start_date">Fecha de inicio en estudios:</label>
-        <input type="date" name="start_date" id="start_date" value="{{ old('start_date') }}" required>
-    </div>
-
-    <div class="form-group">
-        <label for="end_date">Fecha de término en estudios:</label>
-        <input type="date" name="end_date" id="end_date" value="{{ old('end_date') }}">
-    </div>
-
-    <div class="form-group">
-        <label for="courses">Cursos adicionales:</label>
-        <textarea name="courses" id="courses">{{ old('courses') }}</textarea>
-    </div>
-
-    <div class="form-group">
-        <label for="company">Nombre de la empresa:</label>
-        <input type="text" name="company" id="company" value="{{ old('company') }}" required>
-    </div>
-
-    <div class="form-group">
-        <label for="position">Cargo:</label>
-        <input type="text" name="position" id="position" value="{{ old('position') }}" required>
-    </div>
-
-    <div class="form-group">
-        <label for="job_start_date">Fecha de inicio en el trabajo:</label>
-        <input type="date" name="job_start_date" id="job_start_date" value="{{ old('job_start_date') }}" required>
-    </div>
-
-    <div class="form-group">
-        <label for="job_end_date">Fecha de término en el trabajo:</label>
-        <input type="date" name="job_end_date" id="job_end_date" value="{{ old('job_end_date') }}">
-    </div>
-
-    <div class="form-group">
-        <label for="job_description">Descripción de las funciones:</label>
-        <textarea name="job_description" id="job_description">{{ old('job_description') }}</textarea>
-    </div>
-
-    <div class="form-group">
-        <label for="references">Referencias laborales:</label>
-        <textarea name="references" id="references">{{ old('references') }}</textarea>
-    </div>
-
-    <div class="form-group">
-        <label for="skills">Habilidades:</label>
-        <textarea name="skills" id="skills">{{ old('skills') }}</textarea>
-    </div>
-
-    <div class="form-group">
-        <label for="languages">Idiomas:</label>
-        <input type="text" name="languages" id="languages" value="{{ old('languages') }}">
-    </div>
-
-    <div class="form-group">
-        <label for="salary_expectation">Expectativa de sueldo (en pesos chilenos):</label>
-        <input type="number" name="salary_expectation" id="salary_expectation" value="{{ old('salary_expectation') }}" required step="1">
-    </div>
-
-    <div class="form-group">
-        <label for="available">Disponibilidad inmediata:</label>
-        <input type="checkbox" name="available" id="available" {{ old('available') ? 'checked' : '' }}>
-    </div>
-
-    <div class="form-group">
-        <label for="personal_references">Referencias personales:</label>
-        <textarea name="personal_references" id="personal_references">{{ old('personal_references') }}</textarea>
-    </div>
-
-    <button type="submit">Guardar</button>
-</form>
-@endsection
+<script>
+    function addEducation() {
+        document.getElementById('education-section').innerHTML += document.querySelector('.education-item').outerHTML;
+    }
+    function addWork() {
+        document.getElementById('work-section').innerHTML += document.querySelector('.work-item').outerHTML;
+    }
+    function addReference() {
+        document.getElementById('reference-section').innerHTML += document.querySelector('.reference-item').outerHTML;
+    }
+</script>
