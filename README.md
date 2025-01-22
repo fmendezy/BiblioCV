@@ -38,58 +38,156 @@ Este proyecto está desarrollado utilizando las siguientes tecnologías:
 
 1.  **Clonar el repositorio:**
 
-    ```bash
-    git clone [https://github.com/fmendezy/bibliocv.git](https://github.com/fmendezy/bibliocv.git)
-    cd bibliocv
-    ```
+### Instalación en Windows y Linux
 
-2.  **Instalar dependencias:**
+#### Windows
 
-    Ejecuta el siguiente comando para instalar las dependencias de Laravel:
+1. **Instalar Chocolatey:**
 
-    ```bash
-    composer install
-    ```
+Si no tienes Chocolatey instalado, puedes instalarlo siguiendo las instrucciones en [https://chocolatey.org/install](https://chocolatey.org/install).
 
-3.  **Configurar el archivo `.env`:**
+2. **Instalar PHP y Composer:**
 
-    Abre el archivo `.env` y configura los parámetros de la base de datos:
+Ejecuta los siguientes comandos en PowerShell (como administrador):
 
-    ```ini
-    DB_CONNECTION=mysql
-    DB_HOST=127.0.0.1
-    DB_PORT=3306
-    DB_DATABASE=bibliocv
-    DB_USERNAME=tu_usuario
-    DB_PASSWORD=tu_contraseña
-    ```
+```bash
+choco install php
+choco install composer
+```
 
-4.  **Generar la clave de la aplicación:**
+3. **Clonar el repositorio:**
 
-    Ejecuta el siguiente comando:
+```bash
+git clone https://github.com/fmendezy/bibliocv.git
+cd bibliocv
+```
 
-    ```bash
-    php artisan key:generate
-    ```
+4. **Instalar dependencias:**
 
-5.  **Migraciones de la base de datos:**
+Ejecuta el siguiente comando para instalar las dependencias de Laravel:
 
-    Ejecuta las migraciones para crear las tablas:
+```bash
+composer install
+```
 
-    ```bash
-    php artisan migrate
-    ```
+5. **Configurar el archivo `.env`:**
 
-6.  **Servir la aplicación:**
+Abre el archivo `.env` y configura los parámetros de la base de datos:
 
-    Inicia el servidor de desarrollo de Laravel:
+```ini
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=bibliocv
+DB_USERNAME=tu_usuario
+DB_PASSWORD=tu_contraseña
+```
 
-    ```bash
-    php artisan serve
-    ```
+6. **Generar la clave de la aplicación:**
 
-    Ahora puedes acceder a la aplicación en tu navegador en `http://localhost:8000`.
+Ejecuta el siguiente comando:
 
+```bash
+php artisan key:generate
+```
+
+7. **Migraciones de la base de datos:**
+
+Ejecuta las migraciones para crear las tablas:
+
+```bash
+php artisan migrate
+```
+
+8. **Servir la aplicación:**
+
+Inicia el servidor de desarrollo de Laravel:
+
+```bash
+php artisan serve
+```
+
+Ahora puedes acceder a la aplicación en tu navegador en `http://localhost:8000`.
+
+#### Linux
+
+1. **Instalar PHP y Composer:**
+
+Ejecuta los siguientes comandos en la terminal:
+
+```bash
+sudo apt update
+sudo apt install php php-cli php-mbstring unzip curl
+curl -sS https://getcomposer.org/installer | php
+sudo mv composer.phar /usr/local/bin/composer
+```
+
+2. **Clonar el repositorio:**
+
+```bash
+git clone https://github.com/fmendezy/bibliocv.git
+cd bibliocv
+```
+
+3. **Instalar dependencias:**
+
+Ejecuta el siguiente comando para instalar las dependencias de Laravel:
+
+```bash
+composer install
+```
+
+4. **Configurar el archivo `.env`:**
+
+Abre el archivo `.env` y configura los parámetros de la base de datos:
+
+```ini
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=bibliocv
+DB_USERNAME=tu_usuario
+DB_PASSWORD=tu_contraseña
+```
+
+5. **Generar la clave de la aplicación:**
+
+Ejecuta el siguiente comando:
+
+```bash
+php artisan key:generate
+```
+
+6. **Migraciones de la base de datos:**
+
+Ejecuta las migraciones para crear las tablas:
+
+```bash
+php artisan migrate
+```
+
+7. **Servir la aplicación:**
+
+Inicia el servidor de desarrollo de Laravel:
+
+```bash
+php artisan serve
+```
+
+Ahora puedes acceder a la aplicación en tu navegador en `http://localhost:8000`.
+
+     ### Datos de acceso precargado en DB de usuarios diferenciados:
+### Datos de acceso precargado en DB de usuarios diferenciados:
+
+Las siguientes cuentas vienen precargadas en la plataforma a fin de poder realizar las correspondientes pruebas de manera rápida, igualmente está habilitado y funcionando el registro de cuentas con la opción de seleccionar el ROL a fin de demostrar el funcionamiento del mismo, cada rol tiene un mensaje distinto en el Dashboard a fin de demostrar la correcta funcionalidad del sistema.
+
+**Funcionario:**
+Correo: `funcionario@bibliocv.cl`
+Contraseña: `password`
+
+**Usuario:**
+Correo: `usuario@bibliocv.cl`
+Contraseña: `password`
 ## Contribuciones
 
 Si deseas contribuir al desarrollo de este proyecto, sigue estos pasos:
