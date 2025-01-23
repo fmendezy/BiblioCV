@@ -10,13 +10,15 @@ return new class extends Migration
     {
         Schema::create('curriculums', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('rut')->unique();
             $table->string('name');
+            $table->string('civil_status');
             $table->string('email')->unique();
             $table->string('phone');
-            $table->string('job_title');
+            $table->string('job_title'); 
             $table->text('profile_summary')->nullable();
-            $table->string('photo')->nullable();  // URL de la foto
+            $table->string('profile_image')->nullable();
             $table->timestamps();
         });
     }

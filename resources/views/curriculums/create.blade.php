@@ -1,115 +1,170 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Crear Currículum') }}
-        </h2>
-    </x-slot>
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mt-6">
+        <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
+            <h2 class="text-2xl font-semibold mb-6">Crear Currículum</h2>
+            <form action="{{ route('curriculums.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                <form action="{{ route('curriculums.store') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-
-                    <div class="mb-4">
-                        <label class="block text-gray-700">RUT:</label>
-                        <input type="text" name="rut" class="w-full border-gray-300 rounded-md shadow-sm">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <x-input-label for="rut" :value="__('RUT')" />
+                        <x-text-input id="rut" class="block mt-1 w-full rounded-md" type="text" name="rut" placeholder="Ingrese su RUT" required />
                     </div>
 
-                    <div class="mb-4">
-                        <label class="block text-gray-700">Nombre:</label>
-                        <input type="text" name="name" class="w-full border-gray-300 rounded-md shadow-sm">
+                    <div>
+                        <x-input-label for="name" :value="__('Nombre')" />
+                        <x-text-input id="name" class="block mt-1 w-full rounded-md" type="text" name="name" placeholder="Ingrese su nombre" required />
                     </div>
 
-                    <div class="mb-4">
-                        <label class="block text-gray-700">Email:</label>
-                        <input type="email" name="email" class="w-full border-gray-300 rounded-md shadow-sm">
+                    <div>
+                        <x-input-label for="email" :value="__('Correo Electrónico')" />
+                        <x-text-input id="email" class="block mt-1 w-full rounded-md" type="email" name="email" placeholder="ejemplo@correo.com" required />
                     </div>
 
-                    <div class="mb-4">
-                        <label class="block text-gray-700">Teléfono:</label>
-                        <input type="text" name="phone" class="w-full border-gray-300 rounded-md shadow-sm">
+                    <div>
+                        <x-input-label for="phone" :value="__('Teléfono')" />
+                        <x-text-input id="phone" class="block mt-1 w-full rounded-md" type="text" name="phone" placeholder="+56912345678" required />
                     </div>
 
-                    <div class="mb-4">
-                        <label class="block text-gray-700">Título Profesional:</label>
-                        <input type="text" name="job_title" class="w-full border-gray-300 rounded-md shadow-sm">
+                    <div>
+                        <x-input-label for="civil_status" :value="__('Estado Civil')" />
+                        <select id="civil_status" name="civil_status" class="block mt-1 w-full rounded-md">
+                            <option value="Soltero(a)">Soltero(a)</option>
+                            <option value="Casado(a)">Casado(a)</option>
+                            <option value="Divorciado(a)">Divorciado(a)</option>
+                            <option value="Viudo(a)">Viudo(a)</option>
+                        </select>
                     </div>
 
-                    <div class="mb-4">
-                        <label class="block text-gray-700">Resumen Profesional:</label>
-                        <textarea name="profile_summary" class="w-full border-gray-300 rounded-md shadow-sm"></textarea>
+                    <div>
+                        <x-input-label for="profile_image" :value="__('Foto de Perfil (URL o Archivo)')" />
+                        <x-text-input id="profile_image" class="block mt-1 w-full rounded-md" type="url" name="profile_image" placeholder="https://imagen.com/foto.jpg" />
+                        <input type="file" name="photo_file" accept="image/png, image/jpeg, image/gif" class="mt-2" onchange="previewImage(event)">
+                        <img id="preview" src="" class="mt-2 rounded-md" style="max-width: 150px; display: none;">
                     </div>
 
-                    <div class="mb-4">
-                        <label class="block text-gray-700">Foto:</label>
-                        <input type="file" name="photo" class="w-full border-gray-300 rounded-md shadow-sm">
+                    <div>
+                        <x-input-label for="summary" :value="__('Resumen Profesional')" />
+                        <textarea id="summary" name="summary" class="block mt-1 w-full rounded-md" placeholder="Describa su perfil profesional aquí"></textarea>
                     </div>
+                </div>
 
-                    <div class="mb-4">
-                        <h3 class="text-lg font-bold">Formación Académica</h3>
-                        <div id="education-section">
-                            <div class="education-item">
-                                <input type="text" name="education[][institution]" placeholder="Institución" class="w-full border-gray-300 rounded-md shadow-sm mb-2">
-                                <input type="text" name="education[][degree]" placeholder="Título obtenido" class="w-full border-gray-300 rounded-md shadow-sm mb-2">
-                                <input type="text" name="education[][start_year]" placeholder="Año de inicio" class="w-full border-gray-300 rounded-md shadow-sm mb-2">
-                                <input type="text" name="education[][end_year]" placeholder="Año de finalización" class="w-full border-gray-300 rounded-md shadow-sm mb-2">
+                <div class="mt-6">
+                    <h3 class="text-xl font-semibold mb-2">Formación Académica</h3>
+                    <div id="education-container">
+                        <div class="grid grid-cols-2 gap-4">
+                            <label class="block text-sm font-medium text-gray-700">Institución</label>
+                            <input type="text" name="institution[]" placeholder="Institución" class="block mt-1 w-full rounded-md">
+                            <label class="block text-sm font-medium text-gray-700">Título</label>
+                            <input type="text" name="degree[]" placeholder="Título" class="block mt-1 w-full rounded-md">
+                        </div>
+                    </div>
+                    <button type="button" class="mt-2 text-blue-600" onclick="addEducation()">Agregar Formación</button>
+                </div>
+
+                <div class="mt-6">
+                    <h3 class="text-xl font-semibold mb-2">Experiencia Laboral</h3>
+                    <div id="experience-container">
+                        <label class="block text-sm font-medium text-gray-700">Empresa</label>
+                        <input type="text" name="company[]" placeholder="Nombre de la empresa" class="block mt-1 w-full rounded-md">
+                        <label class="block text-sm font-medium text-gray-700">Puesto</label>
+                        <input type="text" name="position[]" placeholder="Cargo ocupado" class="block mt-1 w-full rounded-md">
+                    </div>
+                    <button type="button" class="mt-2 text-blue-600" onclick="addExperience()">Agregar Experiencia</button>
+                </div>
+
+                <div class="mt-6">
+                    <h3 class="text-xl font-semibold mb-2">Habilidades</h3>
+                    <div id="skills-container">
+                        <x-input-label :value="__('Habilidad')" />
+                        <x-text-input type="text" name="skills[]" placeholder="Ingrese habilidad" class="block mt-1 w-full rounded-md" />
+                    </div>
+                    <button type="button" class="mt-2 text-blue-600" onclick="addSkill()">Agregar Habilidad</button>
+                </div>
+
+                <div class="mt-6">
+                    <h3 class="text-xl font-semibold mb-2">Referencias Personales</h3>
+                    <div id="reference-container">
+                        <div class="grid grid-cols-3 gap-4">
+                            <div>
+                                <x-input-label :value="__('Nombre')" />
+                                <x-text-input type="text" name="reference_name[]" placeholder="Nombre" class="block mt-1 w-full rounded-md" />
+                            </div>
+                            <div>
+                                <x-input-label :value="__('Relación')" />
+                                <x-text-input type="text" name="relation[]" placeholder="Relación" class="block mt-1 w-full rounded-md" />
+                            </div>
+                            <div>
+                                <x-input-label :value="__('Contacto')" />
+                                <x-text-input type="text" name="contact_info[]" placeholder="Contacto" class="block mt-1 w-full rounded-md" />
                             </div>
                         </div>
-                        <button type="button" onclick="addEducation()">Agregar Formación</button>
                     </div>
+                    <button type="button" class="mt-2 text-blue-600" onclick="addReference()">Agregar Referencia</button>
+                </div>
 
-                    <div class="mb-4">
-                        <h3 class="text-lg font-bold">Experiencia Laboral</h3>
-                        <div id="work-section">
-                            <div class="work-item">
-                                <input type="text" name="work[][position]" placeholder="Puesto" class="w-full border-gray-300 rounded-md shadow-sm mb-2">
-                                <input type="text" name="work[][company]" placeholder="Empresa" class="w-full border-gray-300 rounded-md shadow-sm mb-2">
-                                <input type="text" name="work[][start_date]" placeholder="Fecha inicio" class="w-full border-gray-300 rounded-md shadow-sm mb-2">
-                                <input type="text" name="work[][end_date]" placeholder="Fecha fin" class="w-full border-gray-300 rounded-md shadow-sm mb-2">
-                            </div>
-                        </div>
-                        <button type="button" onclick="addWork()">Agregar Experiencia</button>
-                    </div>
-
-                    <div class="mb-4">
-                        <h3 class="text-lg font-bold">Habilidades</h3>
-                        <textarea name="skills" class="w-full border-gray-300 rounded-md shadow-sm"></textarea>
-                    </div>
-
-                    <div class="mb-4">
-                        <h3 class="text-lg font-bold">Referencias</h3>
-                        <div id="reference-section">
-                            <div class="reference-item">
-                                <input type="text" name="references[][name]" placeholder="Nombre" class="w-full border-gray-300 rounded-md shadow-sm mb-2">
-                                <input type="text" name="references[][position]" placeholder="Cargo" class="w-full border-gray-300 rounded-md shadow-sm mb-2">
-                                <input type="text" name="references[][company]" placeholder="Empresa" class="w-full border-gray-300 rounded-md shadow-sm mb-2">
-                                <input type="text" name="references[][phone]" placeholder="Teléfono" class="w-full border-gray-300 rounded-md shadow-sm mb-2">
-                                <input type="text" name="references[][email]" placeholder="Email" class="w-full border-gray-300 rounded-md shadow-sm mb-2">
-                            </div>
-                        </div>
-                        <button type="button" onclick="addReference()">Agregar Referencia</button>
-                    </div>
-
-                    <div class="mt-4">
-                        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md">
-                            Guardar Currículum
-                        </button>
-                    </div>
-                </form>
-            </div>
+                <div class="flex items-center justify-end mt-6">
+                    <x-primary-button class="ms-4">
+                        {{ __('Guardar y Generar PDF') }}
+                    </x-primary-button>
+                </div>
+            </form>
         </div>
     </div>
-</x-app-layout>
 
-<script>
-    function addEducation() {
-        document.getElementById('education-section').innerHTML += document.querySelector('.education-item').outerHTML;
-    }
-    function addWork() {
-        document.getElementById('work-section').innerHTML += document.querySelector('.work-item').outerHTML;
-    }
-    function addReference() {
-        document.getElementById('reference-section').innerHTML += document.querySelector('.reference-item').outerHTML;
-    }
-</script>
+    <script>
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function(){
+                document.getElementById('preview').src = reader.result;
+                document.getElementById('preview').style.display = 'block';
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+
+        function addEducation() {
+            document.getElementById('education-container').insertAdjacentHTML('beforeend', `
+                <div class="grid grid-cols-2 gap-4 mt-2">
+                    <label class="block text-sm font-medium text-gray-700">Institución</label>
+                    <input type="text" name="institution[]" placeholder="Institución" class="block mt-1 w-full rounded-md">
+                    <label class="block text-sm font-medium text-gray-700">Título</label>
+                    <input type="text" name="degree[]" placeholder="Título" class="block mt-1 w-full rounded-md">
+                </div>`);
+        }
+
+        function addExperience() {
+            document.getElementById('experience-container').insertAdjacentHTML('beforeend', `
+                <label class="block text-sm font-medium text-gray-700">Empresa</label>
+                <input type="text" name="company[]" placeholder="Nombre de la empresa" class="block mt-1 w-full rounded-md">
+                <label class="block text-sm font-medium text-gray-700">Puesto</label>
+                <input type="text" name="position[]" placeholder="Cargo ocupado" class="block mt-1 w-full rounded-md">
+            `);
+        }
+
+        function addSkill() {
+            document.getElementById('skills-container').innerHTML += `
+                <div class="mt-2">
+                    <x-input-label :value="__('Habilidad')" />
+                    <input type="text" name="skills[]" placeholder="Ingrese habilidad" class="block mt-1 w-full rounded-md" />
+                </div>`;
+        }
+
+        function addReference() {
+            document.getElementById('reference-container').innerHTML += `
+                <div class="grid grid-cols-3 gap-4 mt-2">
+                    <div>
+                        <x-input-label :value="__('Nombre')" />
+                        <input type="text" name="reference_name[]" placeholder="Nombre" class="block mt-1 w-full rounded-md" />
+                    </div>
+                    <div>
+                        <x-input-label :value="__('Relación')" />
+                        <input type="text" name="relation[]" placeholder="Relación" class="block mt-1 w-full rounded-md" />
+                    </div>
+                    <div>
+                        <x-input-label :value="__('Contacto')" />
+                        <input type="text" name="contact_info[]" placeholder="Contacto" class="block mt-1 w-full rounded-md" />
+                    </div>
+                </div>`;
+        }
+    </script>
+</x-app-layout>
