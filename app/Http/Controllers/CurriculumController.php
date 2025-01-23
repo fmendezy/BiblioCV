@@ -35,7 +35,7 @@ class CurriculumController extends Controller
         ]);
     
         // Procesar la imagen
-        $photoPath = $request->profile_image;
+        $photoPath = null;
         if ($request->hasFile('photo_file')) {
             $photoPath = $request->file('photo_file')->store('profiles', 'public');
         }
@@ -47,7 +47,7 @@ class CurriculumController extends Controller
             'rut' => $request->rut,
             'email' => $request->email,
             'phone' => $request->phone,
-            'profile_image' => $photoPath,
+            'photo' => $photoPath,
             'summary' => $request->summary,
             'civil_status' => $request->civil_status,
         ]);

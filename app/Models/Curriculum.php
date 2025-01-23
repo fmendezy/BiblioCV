@@ -17,9 +17,11 @@ class Curriculum extends Model
         'name',
         'email',
         'phone',
-        'profile_image',
-        'summary',
+        'job_title',
+        'profile_summary',
+        'photo',
         'civil_status',
+        'summary',
     ];
     
     public function educations()
