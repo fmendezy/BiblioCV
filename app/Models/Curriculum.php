@@ -19,10 +19,9 @@ class Curriculum extends Model
         'marital_status',
         'email',
         'phone',
+        'photo',
         'job_title',
         'profile_summary',
-        'photo',
-        'civil_status',
         'summary',
     ];
     

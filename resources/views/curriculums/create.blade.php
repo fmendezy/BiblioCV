@@ -36,10 +36,10 @@
         @endif
 
         <form action="{{ route('curriculums.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
-            @csrf
+                @csrf
             <!-- Información Personal -->
-            <div class="grid grid-cols-2 gap-4">
-                <div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
                     <label for="rut" class="block font-medium text-sm text-gray-700">RUT</label>
                     <input id="rut" type="text" name="rut" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                         value="{{ old('rut') }}" required pattern="^\d{8}-[0-9Kk]$" title="Formato: 12345678-9">
@@ -48,8 +48,8 @@
                     <label for="name" class="block font-medium text-sm text-gray-700">Nombre Completo</label>
                     <input id="name" type="text" name="name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                         value="{{ old('name') }}" required minlength="3" maxlength="255">
-                </div>
-                <div>
+                    </div>
+                    <div>
                     <label for="birthdate" class="block font-medium text-sm text-gray-700">Fecha de Nacimiento</label>
                     <input id="birthdate" type="date" name="birthdate" 
                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
@@ -288,6 +288,7 @@
                 </button>
             </div>
 
+            <!-- Botones del formulario -->
             <div class="flex items-center justify-end mt-6 space-x-8">
                 <button type="button" onclick="precargarDatos()" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                     Precargar Datos de Ejemplo
@@ -295,7 +296,7 @@
                 <button type="submit" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                     Guardar y Generar PDF
                 </button>
-                </div>
+            </div>
             </form>
     </div>
 </div>

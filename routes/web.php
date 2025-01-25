@@ -19,15 +19,20 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
 
-Route::middleware(['auth', 'role:employee'])->group(function () {
-    Route::get('/curriculums', [CurriculumController::class, 'index'])->name('curriculums.index');
-    Route::get('/curriculums/create', [CurriculumController::class, 'create'])->name('curriculums.create');
-    Route::post('/curriculums', [CurriculumController::class, 'store'])->name('curriculums.store');
-    Route::get('/curriculums/{id}/edit', [CurriculumController::class, 'edit'])->name('curriculums.edit');
-    Route::put('/curriculums/{id}', [CurriculumController::class, 'update'])->name('curriculums.update');
-    Route::delete('/curriculums/{id}', [CurriculumController::class, 'destroy'])->name('curriculums.destroy');
+    // Rutas para usuarios
+    Route::middleware(['role:user'])->group(function () {
+        Route::get('/my-curriculums', [CurriculumController::class, 'myCurriculums'])->name('curriculums.my');
+    });
+
+    // Rutas para funcionarios
+    Route::middleware(['role:employee'])->group(function () {
+        Route::resource('curriculums', CurriculumController::class);
+        Route::get('/curriculums/search', [CurriculumController::class, 'search'])->name('curriculums.search');
+    });
+
+    // Ruta compartida para ver curriculum (la protección está en el controlador)
+    Route::get('/curriculums/{curriculum}/download', [CurriculumController::class, 'show'])->name('curriculums.show');
 });
 
 

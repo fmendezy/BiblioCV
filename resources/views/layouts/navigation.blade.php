@@ -24,6 +24,9 @@
                         {{ __('Crear Currículum') }}
                     </x-nav-link>
                 @elseif(auth()->user()->role === 'user')
+                    <x-nav-link :href="route('curriculums.my')" :active="request()->routeIs('curriculums.my')">
+                        {{ __('Mis Currículums') }}
+                    </x-nav-link>
                     <x-nav-link :href="route('profile.edit')" :active="request()->routeIs('profile.edit')">
                         {{ __('Mi Perfil') }}
                     </x-nav-link>
@@ -90,6 +93,9 @@
                 {{ __('Crear Currículum') }}
             </x-responsive-nav-link>
         @elseif(auth()->user()->role === 'user')
+            <x-responsive-nav-link :href="route('curriculums.my')" :active="request()->routeIs('curriculums.my')">
+                {{ __('Mis Currículums') }}
+            </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('profile.edit')" :active="request()->routeIs('profile.edit')">
                 {{ __('Mi Perfil') }}
             </x-responsive-nav-link>
