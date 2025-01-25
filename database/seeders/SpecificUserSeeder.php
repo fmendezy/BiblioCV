@@ -16,14 +16,14 @@ class SpecificUserSeeder extends Seeder
             'name' => 'Juan Pérez Soto',
             'email' => 'juan.perez@gmail.com',
             'password' => bcrypt('password'),
-            'rut' => '98765432-1',
+            'rut' => '98765430-5',
             'role' => 'user',
             'library_id' => 1, // Biblioteca Nacional
         ]);
 
         // Primer CV - 2022 (Un trabajo)
         $cv1 = Curriculum::create([
-            'rut' => '98765432-1',
+            'rut' => '98765430-5',
             'name' => 'Juan Pérez Soto',
             'email' => 'juan.perez@gmail.com',
             'phone' => '+56912345678',
@@ -42,8 +42,7 @@ class SpecificUserSeeder extends Seeder
                 'institution' => 'Universidad de Chile',
                 'degree' => 'Ingeniería en Informática',
                 'start_date' => '2015-03-01',
-                'end_date' => '2020-12-15',
-                'description' => 'Especialización en desarrollo de software'
+                'end_date' => '2020-12-15'
             ]
         ]);
 
@@ -69,14 +68,14 @@ class SpecificUserSeeder extends Seeder
         $cv1->references()->createMany([
             [
                 'name' => 'Carlos Ruiz',
-                'position' => 'Tech Lead en TechStart SpA',
+                'relation' => 'Tech Lead en TechStart SpA',
                 'contact' => '+56987654321'
             ]
         ]);
 
         // Segundo CV - 2023 (Dos trabajos)
         $cv2 = Curriculum::create([
-            'rut' => '98765432-1',
+            'rut' => '98765430-5',
             'name' => 'Juan Pérez Soto',
             'email' => 'juan.perez@gmail.com',
             'phone' => '+56912345678',
@@ -95,8 +94,7 @@ class SpecificUserSeeder extends Seeder
                 'institution' => 'Universidad de Chile',
                 'degree' => 'Ingeniería en Informática',
                 'start_date' => '2015-03-01',
-                'end_date' => '2020-12-15',
-                'description' => 'Especialización en desarrollo de software'
+                'end_date' => '2020-12-15'
             ]
         ]);
 
@@ -130,20 +128,20 @@ class SpecificUserSeeder extends Seeder
         // Referencias actualizadas
         $cv2->references()->createMany([
             [
-                'name' => 'Ana Martínez',
-                'position' => 'Project Manager en WebSolutions Chile',
-                'contact' => '+56987654322'
+                'name' => 'Carlos Ruiz',
+                'relation' => 'Tech Lead en TechStart SpA',
+                'contact' => '+56987654321'
             ],
             [
-                'name' => 'Carlos Ruiz',
-                'position' => 'Tech Lead en TechStart SpA',
-                'contact' => '+56987654321'
+                'name' => 'Pedro Sánchez',
+                'relation' => 'Senior Developer en WebSolutions Chile',
+                'contact' => '+56987654322'
             ]
         ]);
 
         // Tercer CV - 2024 (Tres trabajos)
         $cv3 = Curriculum::create([
-            'rut' => '98765432-1',
+            'rut' => '98765430-5',
             'name' => 'Juan Pérez Soto',
             'email' => 'juan.perez@gmail.com',
             'phone' => '+56912345678',
@@ -162,40 +160,38 @@ class SpecificUserSeeder extends Seeder
                 'institution' => 'Universidad de Chile',
                 'degree' => 'Ingeniería en Informática',
                 'start_date' => '2015-03-01',
-                'end_date' => '2020-12-15',
-                'description' => 'Especialización en desarrollo de software'
+                'end_date' => '2020-12-15'
             ],
             [
                 'institution' => 'AWS',
                 'degree' => 'AWS Certified Developer Associate',
                 'start_date' => '2023-11-01',
-                'end_date' => '2023-12-15',
-                'description' => 'Certificación profesional en desarrollo cloud'
+                'end_date' => '2023-12-15'
             ]
         ]);
 
-        // Todas las experiencias
+        // Experiencias laborales actualizadas
         $cv3->experiences()->createMany([
             [
                 'company' => 'GlobalTech SA',
                 'position' => 'Desarrollador Full Stack Senior',
                 'start_date' => '2024-01-01',
-                'end_date' => null,
+                'end_date' => '2024-12-31',
                 'description' => 'Liderazgo técnico en proyectos cloud. Desarrollo de arquitecturas serverless y microservicios.'
             ],
             [
                 'company' => 'WebSolutions Chile',
-                'position' => 'Desarrollador Web Semi Senior',
+                'position' => 'Desarrollador Full Stack Semi Senior',
                 'start_date' => '2023-01-01',
                 'end_date' => '2023-12-31',
-                'description' => 'Desarrollo de aplicaciones web empresariales usando Laravel y React. Implementación de APIs RESTful.'
+                'description' => 'Desarrollo de aplicaciones web con Laravel y React. Implementación de CI/CD.'
             ],
             [
                 'company' => 'TechStart SpA',
                 'position' => 'Desarrollador Web Junior',
-                'start_date' => '2022-01-01',
+                'start_date' => '2022-03-01',
                 'end_date' => '2022-12-31',
-                'description' => 'Desarrollo de aplicaciones web usando PHP y JavaScript. Mantenimiento de sistemas existentes.'
+                'description' => 'Desarrollo de aplicaciones web con PHP y MySQL.'
             ]
         ]);
 
@@ -212,12 +208,12 @@ class SpecificUserSeeder extends Seeder
         $cv3->references()->createMany([
             [
                 'name' => 'Roberto González',
-                'position' => 'CTO en GlobalTech SA',
+                'relation' => 'CTO en GlobalTech SA',
                 'contact' => '+56987654323'
             ],
             [
                 'name' => 'Ana Martínez',
-                'position' => 'Project Manager en WebSolutions Chile',
+                'relation' => 'Project Manager en WebSolutions Chile',
                 'contact' => '+56987654322'
             ]
         ]);

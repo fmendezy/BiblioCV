@@ -174,7 +174,7 @@ php artisan key:generate
 Ejecuta las migraciones para crear las tablas:
 
 ```bash
-php artisan migrate
+php artisan migrate:fresh --seed
 ```
 
 7. **Servir la aplicación:**
