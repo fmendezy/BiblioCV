@@ -8,15 +8,19 @@ use Illuminate\Database\Eloquent\Model;
 class WorkExperience extends Model
 {
     use HasFactory;
-    protected $table = 'work_experiences';
 
     protected $fillable = [
         'curriculum_id',
-        'position',
         'company',
+        'position',
         'start_date',
         'end_date',
-        'responsibilities',
+        'description'
+    ];
+
+    protected $dates = [
+        'start_date',
+        'end_date'
     ];
 
     public function curriculum()

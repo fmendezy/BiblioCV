@@ -14,8 +14,13 @@ class AcademicEducation extends Model
         'curriculum_id',
         'institution',
         'degree',
-        'start_year',
-        'end_year',
+        'start_date',
+        'end_date'
+    ];
+
+    protected $dates = [
+        'start_date',
+        'end_date'
     ];
 
     public function curriculum()

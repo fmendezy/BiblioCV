@@ -15,7 +15,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
+        <div class="min-h-screen bg-gray-100 flex flex-col">
             @include('layouts.navigation')
 
             <!-- Page Heading -->
@@ -28,13 +28,21 @@
             @endisset
 
             <!-- Page Content -->
-            <main>
-                {{ $slot }}
+            <main class="flex-grow">
+                @yield('content')
             </main>
-        </div>
-        <footer class="text-center text-xs text-gray-500 py-4 w-full bg-transparent">
-    © {{ date('Y') }} BiblioCV 1.0.0 | Desarrollado por Francisco Mendez
-</footer>
 
+            <!-- Footer -->
+            <footer class="border-t border-gray-200 bg-transparent">
+                <div class="flex justify-center items-center py-4">
+                    <p class="text-sm text-gray-600">
+                        © {{ date('Y') }} BiblioCV 1.0.0 | Desarrollado por Francisco Mendez
+                    </p>
+                </div>
+            </footer>
+        </div>
+
+        <!-- Stack de Scripts -->
+        @stack('scripts')
     </body>
 </html>

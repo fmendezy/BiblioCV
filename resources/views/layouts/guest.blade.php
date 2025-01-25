@@ -28,9 +28,13 @@
         </div>
 
         <!-- Footer -->
-        <footer class="text-center text-xs text-gray-500 py-4 w-full bg-transparent">
-    © {{ date('Y') }} BiblioCV 1.0.0 | Desarrollado por Francisco Mendez
-</footer>
+        <footer class="fixed bottom-0 w-full bg-white border-t border-gray-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                <div class="text-center text-sm text-gray-600">
+                    © {{ date('Y') }} BiblioCV 1.0.0 | Desarrollado por Francisco Mendez
+                </div>
+            </div>
+        </footer>
 
     </body>
 </html>

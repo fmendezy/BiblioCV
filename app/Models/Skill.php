@@ -12,7 +12,7 @@ class Skill extends Model
 
     protected $fillable = [
         'curriculum_id',
-        'skill',
+        'name'
     ];
 
     public function curriculum()

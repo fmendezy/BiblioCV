@@ -15,6 +15,8 @@ class Curriculum extends Model
         'user_id',
         'rut',
         'name',
+        'birthdate',
+        'marital_status',
         'email',
         'phone',
         'job_title',
@@ -23,6 +25,11 @@ class Curriculum extends Model
         'civil_status',
         'summary',
     ];
+    
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
     
     public function educations()
     {

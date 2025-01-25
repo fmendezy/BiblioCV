@@ -13,10 +13,8 @@ class Reference extends Model
     protected $fillable = [
         'curriculum_id',
         'name',
-        'position',
-        'company',
-        'phone',
-        'email',
+        'relation',
+        'contact'
     ];
 
     public function curriculum()

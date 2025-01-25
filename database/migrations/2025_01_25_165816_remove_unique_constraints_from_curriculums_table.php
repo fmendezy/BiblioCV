@@ -6,14 +6,24 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
+        Schema::dropIfExists('curriculum_logs');
+        Schema::dropIfExists('skills');
+        Schema::dropIfExists('references');
+        Schema::dropIfExists('work_experiences');
+        Schema::dropIfExists('academic_educations');
+        Schema::dropIfExists('curriculums');
+
         Schema::create('curriculums', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('rut')->unique();
+            $table->string('rut');
             $table->string('name');
-            $table->string('email')->unique();
+            $table->string('email');
             $table->string('phone');
             $table->string('job_title')->nullable();
             $table->text('profile_summary')->nullable();
@@ -59,12 +69,23 @@ return new class extends Migration
             $table->string('contact');
             $table->timestamps();
         });
+
+        Schema::create('curriculum_logs', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('curriculum_id')->constrained('curriculums')->onDelete('cascade');
+            $table->string('action');
+            $table->timestamps();
+        });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
-        Schema::dropIfExists('references');
+        Schema::dropIfExists('curriculum_logs');
         Schema::dropIfExists('skills');
+        Schema::dropIfExists('references');
         Schema::dropIfExists('work_experiences');
         Schema::dropIfExists('academic_educations');
         Schema::dropIfExists('curriculums');
