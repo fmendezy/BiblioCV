@@ -13,6 +13,21 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\User::factory(10)->create();
+        $this->call([
+            LibrarySeeder::class,
+            UserSeeder::class,
+            CurriculumSeeder::class,
+            SpecificUserSeeder::class,
+        ]);
+
+        // Creamos el usuario administrador por defecto
+        User::create([
+            'name' => 'Administrador BiblioCV',
+            'email' => 'administrador@bibliocv.cl',
+            'password' => Hash::make('password'),
+            'role' => 'admin',
+            'rut' => '11111110-3',
+            'library_id' => 1, // ID de la Biblioteca Municipal de Paine
+        ]);
     }
 }

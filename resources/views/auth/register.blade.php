@@ -6,9 +6,10 @@
     <div class="mt-4">
             <x-input-label for="rut" :value="__('RUT')" />
             <x-text-input id="rut" class="block mt-1 w-full" type="text" name="rut" :value="old('rut')" maxlength="10"
-                placeholder="11222333-4" x-data
+                placeholder="11223344-5" x-data
                 x-on:input="event.target.value = event.target.value.replace(/\./g, '').toUpperCase()"
-                x-on:blur="event.target.value = event.target.value.replace(/^(\d{1,8})([kK0-9])$/, '$1-$2')"
+                x-on:blur="event.target.value = event.target.value.replace(/^(\d{7,8})([kK0-9])$/, '$1-$2')"
+                pattern="^\d{7,8}[-][0-9kK]{1}$" title="Formato: 11223344-5"
             />
             <x-input-error :messages="$errors->get('rut')" class="mt-2" />
         </div>
@@ -17,11 +18,26 @@
             <div class="mt-4">
         <x-input-label for="role" :value="__('Tipo de cuenta')" />
         <select id="role" name="role" required class="block mt-1 w-full">
-            <option value="user">Usuario</option>
+            <option value="admin">Administrador</option>
             <option value="employee">Funcionario</option>
+            <option value="user">Usuario</option>
         </select>
         <x-input-error :messages="$errors->get('role')" class="mt-2" />
     </div>
+
+        <!-- Biblioteca -->
+        <div class="mt-4">
+            <x-input-label for="library_id" :value="__('Biblioteca')" />
+            <select id="library_id" name="library_id" required class="block mt-1 w-full">
+                <option value="">Seleccione una biblioteca</option>
+                @foreach($libraries as $library)
+                    <option value="{{ $library->id }}" {{ old('library_id') == $library->id ? 'selected' : '' }}>
+                        {{ $library->name }}
+                    </option>
+                @endforeach
+            </select>
+            <x-input-error :messages="$errors->get('library_id')" class="mt-2" />
+        </div>
 
         <!-- Nombre -->
         <div>

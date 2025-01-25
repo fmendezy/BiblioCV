@@ -12,21 +12,44 @@ class CurriculumController extends Controller
 {
     public function index()
     {
-        $curriculums = Curriculum::with('user')
-            ->orderBy('created_at', 'desc')
+        $user = auth()->user();
+        $query = Curriculum::with(['user', 'user.library']);
+
+        // Si es funcionario, solo mostrar CVs de su biblioteca
+        if ($user->role === 'employee') {
+            $query->whereHas('user', function($q) use ($user) {
+                $q->where('library_id', $user->library_id);
+            });
+        }
+        // Si es admin, puede ver todos los CVs (no se aplica filtro)
+
+        $curriculums = $query->orderBy('created_at', 'desc')
             ->paginate(30);
+            
         return view('curriculums.index', compact('curriculums'));
     }
 
     public function search(Request $request)
     {
         $query = $request->get('query');
+        $user = auth()->user();
         
-        $curriculums = Curriculum::with('user')
-            ->where('rut', 'LIKE', "%{$query}%")
-            ->orWhere('name', 'LIKE', "%{$query}%")
-            ->orWhereHas('user', function($q) use ($query) {
-                $q->where('name', 'LIKE', "%{$query}%");
+        $curriculumsQuery = Curriculum::with(['user', 'user.library']);
+
+        // Si es funcionario, solo mostrar CVs de su biblioteca
+        if ($user->role === 'employee') {
+            $curriculumsQuery->whereHas('user', function($q) use ($user) {
+                $q->where('library_id', $user->library_id);
+            });
+        }
+
+        $curriculums = $curriculumsQuery
+            ->where(function($q) use ($query) {
+                $q->where('rut', 'LIKE', "%{$query}%")
+                  ->orWhere('name', 'LIKE', "%{$query}%")
+                  ->orWhereHas('user', function($q) use ($query) {
+                      $q->where('name', 'LIKE', "%{$query}%");
+                  });
             })
             ->orderBy('created_at', 'desc')
             ->paginate(30);
@@ -54,6 +77,7 @@ class CurriculumController extends Controller
             
             $messages = [
                 'rut.required' => 'El RUT es obligatorio.',
+                'rut.regex' => 'El RUT debe tener el formato: 11223344-5',
                 'name.required' => 'El nombre es obligatorio.',
                 'name.min' => 'El nombre debe tener al menos 3 caracteres.',
                 'email.required' => 'El correo electrónico es obligatorio.',
@@ -71,7 +95,7 @@ class CurriculumController extends Controller
             ];
 
             $validated = $request->validate([
-                'rut' => 'required',
+                'rut' => ['required', 'string', 'regex:/^\d{7,8}[-][0-9kK]{1}$/'],
                 'name' => 'required|string|min:3|max:255',
                 'birthdate' => ['required', 'date', 'before:' . now()->subYears(15)->format('Y-m-d')],
                 'marital_status' => ['required', 'string', 'in:Soltero/a,Casado/a,Divorciado/a,Viudo/a,Conviviente Civil'],
@@ -269,7 +293,7 @@ class CurriculumController extends Controller
             \Log::info('Iniciando actualización de currículum');
             
             $validated = $request->validate([
-                'rut' => 'required',
+                'rut' => ['required', 'string', 'regex:/^\d{7,8}[-][0-9kK]{1}$/'],
                 'name' => 'required|string|min:3|max:255',
                 'birthdate' => ['required', 'date', 'before:' . now()->subYears(15)->format('Y-m-d')],
                 'marital_status' => ['required', 'string', 'in:Soltero/a,Casado/a,Divorciado/a,Viudo/a,Conviviente Civil'],
@@ -407,5 +431,22 @@ class CurriculumController extends Controller
             ->paginate(10);
 
         return view('curriculums.my-curriculums', compact('curriculums'));
+    }
+
+    /**
+     * Muestra los curriculums de la biblioteca del usuario actual
+     */
+    public function libraryCurriculums()
+    {
+        $user = auth()->user();
+        $curriculums = Curriculum::whereHas('user', function($query) use ($user) {
+            $query->where('library_id', $user->library_id);
+        })
+        ->where('rut', '!=', $user->rut) // Excluye los propios CVs del usuario
+        ->with('user')
+        ->orderBy('created_at', 'desc')
+        ->paginate(10);
+
+        return view('curriculums.library', compact('curriculums'));
     }
 }

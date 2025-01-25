@@ -8,7 +8,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('library_id')->nullable()->constrained('library')->onDelete('set null')->after('role');
+            $table->foreignId('library_id')->nullable()->constrained('libraries')->onDelete('set null')->after('role');
         });
     }
 

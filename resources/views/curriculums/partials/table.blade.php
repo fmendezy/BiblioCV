@@ -6,7 +6,9 @@
                 <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">RUT</th>
                 <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
                 <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Creado por</th>
+                <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Biblioteca</th>
                 <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha de Creación</th>
+                <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha de Actualización</th>
                 <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
             </tr>
         </thead>
@@ -16,8 +18,12 @@
                     <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900">{{ $curriculum->id }}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900">{{ $curriculum->rut }}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900">{{ $curriculum->name }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900">{{ $curriculum->user->name }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900">{{ $curriculum->created_at->format('d/m/Y') }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900">{{ $curriculum->user->name ?? 'N/A' }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900">{{ optional($curriculum->user)->library->name ?? 'Sin biblioteca' }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900">{{ $curriculum->created_at->format('d/m/Y H:i') }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900">
+                        {{ $curriculum->updated_at && $curriculum->updated_at->ne($curriculum->created_at) ? $curriculum->updated_at->format('d/m/Y H:i') : '' }}
+                    </td>
                     <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
                         <div class="flex justify-center space-x-3">
                             <!-- Ver -->
@@ -44,7 +50,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">
+                    <td colspan="8" class="px-6 py-4 text-center text-sm text-gray-500">
                         No se encontraron currículums
                     </td>
                 </tr>

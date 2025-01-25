@@ -42,7 +42,7 @@
                     <div>
                     <label for="rut" class="block font-medium text-sm text-gray-700">RUT</label>
                     <input id="rut" type="text" name="rut" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                        value="{{ old('rut') }}" required pattern="^\d{8}-[0-9Kk]$" title="Formato: 12345678-9">
+                        value="{{ old('rut') }}" required pattern="^\d{7,8}[-][0-9kK]{1}$" title="Formato: 11223344-5">
                 </div>
                 <div>
                     <label for="name" class="block font-medium text-sm text-gray-700">Nombre Completo</label>

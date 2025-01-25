@@ -91,13 +91,24 @@ Ejecuta el siguiente comando:
 php artisan key:generate
 ```
 
-7. **Migraciones de la base de datos:**
+7. **Migraciones y datos de ejemplo:**
 
-Ejecuta las migraciones para crear las tablas:
+Ejecuta las migraciones y los seeders para crear las tablas y cargar datos de ejemplo:
 
 ```bash
-php artisan migrate
+php artisan migrate:fresh --seed
 ```
+
+Este comando:
+- Creará todas las tablas necesarias
+- Cargará bibliotecas de ejemplo
+- Creará usuarios con diferentes roles (admin, employee, user)
+- Cargará 10 currículums de ejemplo completos con:
+  - Datos personales
+  - Educación académica
+  - Experiencia laboral
+  - Habilidades
+  - Referencias profesionales
 
 8. **Servir la aplicación:**
 
@@ -179,15 +190,33 @@ Ahora puedes acceder a la aplicación en tu navegador en `http://localhost:8000`
      ### Datos de acceso precargado en DB de usuarios diferenciados:
 ### Datos de acceso precargado en DB de usuarios diferenciados:
 
-Las siguientes cuentas vienen precargadas en la plataforma a fin de poder realizar las correspondientes pruebas de manera rápida, igualmente está habilitado y funcionando el registro de cuentas con la opción de seleccionar el ROL a fin de demostrar el funcionamiento del mismo, cada rol tiene un mensaje distinto en el Dashboard a fin de demostrar la correcta funcionalidad del sistema.
+Las siguientes cuentas vienen precargadas en la plataforma para realizar pruebas:
+
+**Administrador:**
+- Correo: `administrador@bibliocv.cl`
+- Contraseña: `password`
+- Rol: Administrador del sistema
+- Permisos: Gestión completa de bibliotecas, usuarios y currículums
 
 **Funcionario:**
-Correo: `funcionario@bibliocv.cl`
-Contraseña: `password`
+- Correo: `funcionario@bibliocv.cl`
+- Contraseña: `password`
+- Rol: Empleado de biblioteca
+- Permisos: Gestión de currículums y usuarios de su biblioteca
 
 **Usuario:**
-Correo: `usuario@bibliocv.cl`
-Contraseña: `password`
+- Correo: `usuario@bibliocv.cl`
+- Contraseña: `password`
+- Rol: Usuario regular
+- Permisos: Gestión de sus propios currículums
+
+Adicionalmente, en la tabla de "users" se encuentran varios funcionarios de las bibliotecas de ejemplo, los cuales pueden ser accedidos utilizando el correo electronico disponible en la base de datos y la contraseña "password".
+
+Cada rol tiene acceso a diferentes funcionalidades:
+- **Administrador**: Acceso total al sistema, gestión de bibliotecas y usuarios
+- **Funcionario**: Gestión de currículums en su biblioteca asignada
+- **Usuario**: Creación y gestión de sus propios currículums
+
 ## Contribuciones
 
 Si deseas contribuir al desarrollo de este proyecto, sigue estos pasos:

@@ -21,18 +21,18 @@
                     </div>
                 @elseif(auth()->user()->role === 'user')
                     <h3 class="text-lg font-bold">Bienvenido Usuario</h3>
-                    <p class="text-gray-600">Aquí puedes ver tu perfil y tus currículums.</p>
+                    <p class="text-gray-600">Aquí puedes ver tus currículums y gestionar tu perfil.</p>
                     <div class="mt-4 space-y-2">
                         <a href="{{ route('curriculums.my') }}" class="inline-block bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
-                            Ver Mis Currículums
+                            Ver mis Currículums
                         </a>
                         <a href="{{ route('profile.edit') }}" class="ml-2 inline-block bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">
-                            Editar Perfil
+                            Mi Perfil
                         </a>
                     </div>
                 @else
-                    <h3 class="text-lg font-bold">Bienvenido al sistema</h3>
-                    <p class="text-gray-600">Tu rol no tiene permisos adicionales.</p>
+                    <h3 class="text-lg font-bold">Bienvenido Administrador</h3>
+                    <p class="text-gray-600">Tu rol tiene disponible todas las opciones del sistema.</p>
                 @endif
             </div>
         </div>

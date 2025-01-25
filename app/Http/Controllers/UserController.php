@@ -4,47 +4,72 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Library;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
     // Mostrar todos los usuarios
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::all(); // Obtiene los usuarios
-        return view('users.index', compact('users')); // Pasa solo los usuarios a la vista
+        $search = $request->input('search');
+        
+        $users = User::query()
+            ->when($search, function ($query, $search) {
+                $query->where(function($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                      ->orWhere('email', 'like', "%{$search}%")
+                      ->orWhere('rut', 'like', "%{$search}%")
+                      ->orWhereHas('library', function($q) use ($search) {
+                          $q->where('name', 'like', "%{$search}%");
+                      });
+                });
+            })
+            ->with('library')
+            ->orderBy('id', 'desc')
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('users.index', compact('users'));
     }
 
     // Mostrar el formulario para crear un nuevo usuario
     public function create()
     {
-        return view('users.create');
+        $libraries = Library::all();
+        return view('users.create', compact('libraries'));
     }
 
     // Guardar un nuevo usuario
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
+            'rut' => ['required', 'string', 'regex:/^\d{7,8}[-][0-9kK]{1}$/'],
+            'role' => ['required', 'string', Rule::in(['admin', 'employee', 'user'])],
+            'library_id' => 'required|exists:libraries,id',
+        ], [
+            'rut.regex' => 'El RUT debe tener el formato: 11223344-5',
+            'role.in' => 'El rol debe ser: Administrador, Funcionario o Usuario',
+            'library_id.required' => 'Debe seleccionar una biblioteca',
+            'library_id.exists' => 'La biblioteca seleccionada no existe',
         ]);
 
-        if ($validator->fails()) {
-            return redirect()->route('users.create')
-                                ->withErrors($validator)
-                                ->withInput();
+        DB::beginTransaction();
+        try {
+            $validated['password'] = Hash::make($validated['password']);
+            User::create($validated);
+            DB::commit();
+            return redirect()->route('users.index')->with('success', 'Usuario creado exitosamente.');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back()->withInput()->withErrors(['error' => 'Error al crear el usuario.']);
         }
-
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password), // Encriptar la contraseña
-        ]);
-
-        return redirect()->route('users.index');
     }
 
     // Mostrar un usuario específico
@@ -55,46 +80,85 @@ class UserController extends Controller
     }
 
     // Mostrar el formulario para editar un usuario
-    public function edit($id)
+    public function edit(User $user)
     {
-        $user = User::findOrFail($id);
-        return view('users.edit', compact('user'));
+        $libraries = Library::all();
+        return view('users.edit', compact('user', 'libraries'));
     }
 
     // Actualizar un usuario específico
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
-        $user = User::findOrFail($id);
-
-        $validator = Validator::make($request->all(), [
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
+            'email' => ['required', 'email', Rule::unique('users')->ignore($user->id)],
             'password' => 'nullable|string|min:8|confirmed',
+            'rut' => ['required', 'string', 'regex:/^\d{7,8}[-][0-9kK]{1}$/'],
+            'role' => ['required', 'string', Rule::in(['admin', 'employee', 'user'])],
+            'library_id' => 'required|exists:libraries,id',
+        ], [
+            'rut.regex' => 'El RUT debe tener el formato: 11223344-5',
+            'role.in' => 'El rol debe ser: Administrador, Funcionario o Usuario',
+            'library_id.required' => 'Debe seleccionar una biblioteca',
+            'library_id.exists' => 'La biblioteca seleccionada no existe',
         ]);
 
-        if ($validator->fails()) {
-            return redirect()->route('users.edit', $user->id)
-                                ->withErrors($validator)
-                                ->withInput();
+        DB::beginTransaction();
+        try {
+            if ($request->filled('password')) {
+                $validated['password'] = Hash::make($validated['password']);
+            } else {
+                unset($validated['password']);
+            }
+            
+            $user->update($validated);
+            DB::commit();
+            return redirect()->route('users.index')->with('success', 'Usuario actualizado exitosamente.');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back()->withInput()->withErrors(['error' => 'Error al actualizar el usuario.']);
         }
-
-        $user->update([
-            'name' => $request->name,
-
-            'email' => $request->email,
-
-            'password' => $request->password ? Hash::make($request->password) : $user->password,
-        ]);
-
-        return redirect()->route('users.index');
     }
 
     // Eliminar un usuario
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        $user = User::findOrFail($id);
-        $user->delete();
+        if ($user->id === auth()->id()) {
+            return back()->withErrors(['error' => 'No puedes eliminar tu propio usuario.']);
+        }
 
-        return redirect()->route('users.index');
+        DB::beginTransaction();
+        try {
+            $user->delete();
+            DB::commit();
+            return redirect()->route('users.index')->with('success', 'Usuario eliminado exitosamente.');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back()->withErrors(['error' => 'Error al eliminar el usuario.']);
+        }
+    }
+
+    /**
+     * Busca usuarios por nombre, email o RUT
+     */
+    public function search(Request $request)
+    {
+        $search = $request->get('search');
+        
+        $users = User::where('name', 'like', "%{$search}%")
+            ->orWhere('email', 'like', "%{$search}%")
+            ->orWhere('rut', 'like', "%{$search}%")
+            ->with('library')
+            ->orderBy('name')
+            ->paginate(10);
+
+        if($request->ajax()) {
+            return response()->json([
+                'users' => $users,
+                'links' => $users->links()->toHtml(),
+            ]);
+        }
+
+        return view('users.index', compact('users', 'search'));
     }
 }
