@@ -3,6 +3,19 @@
 @section('content')
 <div class="py-12">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <!-- Mensajes de alerta -->
+        @if (session('success'))
+            <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+                <span class="block sm:inline">{{ session('success') }}</span>
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                <span class="block sm:inline">{{ session('error') }}</span>
+            </div>
+        @endif
+
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
             <!-- Encabezado con título y botón de crear -->
             <div class="flex justify-between items-center mb-6">
@@ -38,7 +51,6 @@
         </div>
     </div>
 </div>
-
 @endsection
 
 @push('scripts')
@@ -66,29 +78,6 @@
             document.getElementById('pagination').innerHTML = data.pagination;
         } catch (error) {
             console.error('Error:', error);
-        }
-    }
-
-    function showDeleteModal(id) {
-        if (confirm('¿Estás seguro de eliminar este currículum? Esta acción no se puede deshacer.')) {
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = `/curriculums/${id}`;
-            
-            const csrfToken = document.createElement('input');
-            csrfToken.type = 'hidden';
-            csrfToken.name = '_token';
-            csrfToken.value = document.querySelector('meta[name="csrf-token"]').content;
-            
-            const methodField = document.createElement('input');
-            methodField.type = 'hidden';
-            methodField.name = '_method';
-            methodField.value = 'DELETE';
-            
-            form.appendChild(csrfToken);
-            form.appendChild(methodField);
-            document.body.appendChild(form);
-            form.submit();
         }
     }
 </script>

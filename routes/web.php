@@ -35,9 +35,13 @@ Route::middleware('auth')->group(function () {
 
     // Rutas para funcionarios
     Route::middleware(['role:employee'])->group(function () {
-        Route::resource('curriculums', CurriculumController::class);
+        Route::resource('curriculums', CurriculumController::class)->except(['destroy']);
         Route::get('/curriculums/search', [CurriculumController::class, 'search'])->name('curriculums.search');
     });
+
+    // Rutas compartidas (accesibles tanto para usuarios como funcionarios)
+    Route::delete('/curriculums/{curriculum}', [CurriculumController::class, 'destroy'])->name('curriculums.destroy');
+    Route::get('/curriculums/{curriculum}/download', [CurriculumController::class, 'show'])->name('curriculums.download');
 
     // Rutas para administradores
     Route::middleware(['role:admin'])->group(function () {
@@ -46,7 +50,4 @@ Route::middleware('auth')->group(function () {
         Route::resource('users', UserController::class);
         Route::get('/users/search', [UserController::class, 'search'])->name('users.search');
     });
-
-    // Ruta compartida para ver curriculum (la protección está en el controlador)
-    Route::get('/curriculums/{curriculum}/download', [CurriculumController::class, 'show'])->name('curriculums.show');
 });

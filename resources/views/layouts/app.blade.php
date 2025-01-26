@@ -35,5 +35,35 @@
                 @yield('content')
             </main>
         </div>
+
+        <!-- Scripts -->
+        <script>
+            function showDeleteModal(id) {
+                if (confirm('¿Estás seguro de eliminar este currículum? Esta acción no se puede deshacer.')) {
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = `/curriculums/${id}`;
+                    form.style.display = 'none';
+                    
+                    const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                    const csrfInput = document.createElement('input');
+                    csrfInput.type = 'hidden';
+                    csrfInput.name = '_token';
+                    csrfInput.value = token;
+                    
+                    const methodInput = document.createElement('input');
+                    methodInput.type = 'hidden';
+                    methodInput.name = '_method';
+                    methodInput.value = 'DELETE';
+                    
+                    form.appendChild(csrfInput);
+                    form.appendChild(methodInput);
+                    document.body.appendChild(form);
+                    
+                    form.submit();
+                }
+            }
+        </script>
+        @stack('scripts')
     </body>
 </html>

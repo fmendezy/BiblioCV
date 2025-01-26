@@ -417,10 +417,39 @@ class CurriculumController extends Controller
 
     public function destroy($id)
     {
-        $curriculum = Curriculum::findOrFail($id);
-        Storage::delete('public/' . $curriculum->profile_image);
-        $curriculum->delete();
-        return redirect()->route('curriculums.index');
+        try {
+            $curriculum = Curriculum::findOrFail($id);
+            
+            // Verificar permisos
+            $user = auth()->user();
+            if ($user->role === 'user' && $curriculum->user_id !== $user->id) {
+                abort(403, 'No tienes permiso para eliminar este currículum.');
+            }
+            
+            if ($user->role === 'employee' && $curriculum->user->library_id !== $user->library_id) {
+                abort(403, 'No tienes permiso para eliminar currículums de otras bibliotecas.');
+            }
+
+            // Eliminar la foto si existe
+            if ($curriculum->photo && Storage::disk('public')->exists($curriculum->photo)) {
+                Storage::disk('public')->delete($curriculum->photo);
+            }
+
+            // Eliminar el curriculum y sus relaciones
+            $curriculum->educations()->delete();
+            $curriculum->experiences()->delete();
+            $curriculum->skills()->delete();
+            $curriculum->references()->delete();
+            $curriculum->delete();
+
+            return redirect()->route('curriculums.index')
+                ->with('success', 'Currículum eliminado exitosamente.');
+                
+        } catch (\Exception $e) {
+            \Log::error('Error al eliminar curriculum: ' . $e->getMessage());
+            return redirect()->route('curriculums.index')
+                ->with('error', 'Error al eliminar el currículum: ' . $e->getMessage());
+        }
     }
 
     public function myCurriculums()
